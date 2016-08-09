@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #online {margin: 10px; padding: 10px; background-color: gray; width: 100px}
+        #box{position: absolute; background-color: black; width: 30px;height: 30px}
+    </style>
+</head>
+<body>
+<div id="online"></div>
+<div id="box"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    var socket = io();
+    socket.on('online', function(online){
+        $('#online').text('Online ' + online);
+    });
+
+    socket.on('position', function(data){
+        $('#box').css('left', 30*data.x);
+        $('#box').css('top', 30*data.y);
+    });
+
+    $(document).keydown(function (e) {
+        switch(e.keyCode){
+            case 38:
+                socket.emit('move', 'up');
+                break;
+            case  40:
+                socket.emit('move', 'down');
+                break;
+            case 39:
+                socket.emit('move', 'right');
+                break;
+            case 37:
+                socket.emit('move', 'left');
+                break;
+        }
+    })
+
+</script>
+</body>
+</html>
